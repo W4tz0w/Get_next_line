@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:45:03 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/01/04 20:54:24 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/01/06 02:34:22 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 # include <stdio.h>
 # include <stddef.h>
 
-int ft_strlen(const char *s)
-void *ft_calloc(size_t count, size_t size)
+int ft_strlen(const char *s);
+int	ft_strchr(char *s, int c);
+void *ft_calloc(size_t count, size_t size);
 char *get_next_line(int fd);
 
 
