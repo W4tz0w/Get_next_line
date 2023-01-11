@@ -6,7 +6,7 @@
 /*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/01/11 22:10:04 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/11 23:37:41 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,29 @@ char	*ft_gnl(char *buff, char *stash, char *line, fd);
 	int	read_count;
 
 	read_count = 1;
+	// valeur de retour de "read"
 	while (read_count > 0 || ft_strchr(line, '\n') != -1)
+	// tant que j'ai qque chose a lire, OU si je trouve '\n'
 	{
 		if (ft_strchr(line, '\n') != -1)
 			return (break_line(line, stash, ft_strchr(line, '\n')));
+		// si je trouve '\n' >>> on renvoie la ligne / on copie les leftovers dans stash / free line / MAIS PAS FREE valeur retour
 		buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		// reset buffer
 		read_count = read(fd, buff, BUFFER_SIZE);
+		// appel de read_fd
+		// on set read_count, le but est de voir si y'a qque chose de lu, donc si on est pas deja a la fin du fd
 		if (read_count == 0)
 			return (handle_end(buff, line));
+		// auquel cas, on retourne NULL (*** a verifier ***)
+		// EH NON ! Car si rien n'a ete lu cet appel, il est fort probable qu'au precedent la stash eu ete remplie
 		if (ft_strchr(buff, '\n') != -1)
+		// apres un check pour '\n', puis un appel de read, puis un check pour '\0', on re-check '\n'
 		{
 			line = ft_strjoin_and_free(line, buff);
+			// colle line+++buff. // free params. // (mais pas free variable de retour))
 			return (break_line(line, stash, ft_strchr(line, '\n')));
+			// on renvoie la ligne / on copie les leftovers dans stash / free line / MAIS PAS FREE valeur retour
 		}
 		else
 			line = ft_strjoin_and_free(line, buff);
@@ -58,6 +69,7 @@ char	*cpy_cut_line(char *src)
 
 char	*cpy_cut_line(stash)
 {
+	int		i;
 	char	*line;
 	char	*tmp;
 
@@ -82,8 +94,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	buff = NULL;
 	line = cpy_cut_line(stash);
-		// set the line from stash, and store the leftovers in static char
-		// to do that, I have to call strchr
+		// calloc n set line from stash (obv if gnl was called at least one time before), and writes '\0' in stash[0]
 	return (ft_gnl(buff, stash, line, fd));
 		// return the line OR NULL
 }

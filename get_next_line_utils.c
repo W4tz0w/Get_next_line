@@ -6,7 +6,7 @@
 /*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:45:14 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/01/11 22:54:56 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/11 23:37:40 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,17 @@ void	*ft_calloc(size_t count, size_t size)
 	return (ptr);
 }
 
-int		ft_strchr(const char *s, int c) // si je trouve c, je retourne l'adresse de ce petit fdp, si je trouve PAS, return (-1)
+char	*ft_strchr(const char *str, int c)
 {
-	int		i;
-
-	i = 0;
-	while (s[i] != '\0')
+	while (*str)
 	{
-		if (s[i] == (char)c)
-			return (i);
-		i++;
+		if (*str == (char)c)
+			return ((char *)str);
+		str++;
 	}
-	if (s[i] == (char)c)
-		return (i);
-	return (-1);
+	if (*str == (char)c)
+	{
+		return ((char *)str);
+	}
+	return (0);
 }
