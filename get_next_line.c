@@ -6,7 +6,7 @@
 /*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/01/07 23:29:04 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/11 22:10:04 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,16 @@ char	*cpy_cut_line(char *src)
 char	*cpy_cut_line(stash)
 {
 	char	*line;
+	char	*tmp;
 
 	while (stash[i] != '\n' || stash[i] != '\0')
 		line[i++] = stash[i++]
-	line[i] = '\0';
-	stash 
+	line[i + 1] = '\0';
+	while (stash[i] != '\0')
+		tmp[0++] = stash[i++]
+	free(stash)
+	while (tmp)
+		stash[0++] = tmp[0++]
 	return (line);
 }
 
