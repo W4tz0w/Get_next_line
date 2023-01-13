@@ -5,45 +5,56 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/26 17:45:14 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/01/11 23:37:40 by egiovann         ###   ########.fr       */
+/*   Created: 2023/01/12 20:02:27 by egiovann          #+#    #+#             */
+/*   Updated: 2023/01/12 23:15:04 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
+
 #include "get_next_line.h"
 
-int	strlen(const char *s)
+int	ft_strlen(const char *s)
 {
 	int	i;
 
+	if (s == NULL)
+		return (0);
 	i = 0;
-	while (s[i])
+	while (s[i] != '\0')
 		i++;
 	return (i);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+char	*ft_calloc(int count, int size)
 {
-	void	*ptr;
+	char	*ptr;
+	int		i;
 
-	ptr = malloc(count * size);
+	ptr = (char *)malloc(count * size);
 	if (!ptr)
 		return (NULL);
-	ft_bzero(ptr, count * size);
+	i = 0;
+	while (i < count)
+	{
+		ptr[i] = 0;
+		i++;
+	}
 	return (ptr);
 }
 
-char	*ft_strchr(const char *str, int c)
+int	ft_strchr(const char *s, int c)
 {
-	while (*str)
+	int		i;
+
+	i = 0;
+	while (s[i] != '\0')
 	{
-		if (*str == (char)c)
-			return ((char *)str);
-		str++;
+		if (s[i] == (char)c)
+			return (i);
+		i++;
 	}
-	if (*str == (char)c)
-	{
-		return ((char *)str);
-	}
-	return (0);
+	if (s[i] == (char)c)
+		return (i);
+	return (-1);
 }
