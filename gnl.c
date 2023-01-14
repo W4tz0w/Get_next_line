@@ -6,7 +6,7 @@
 /*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 18:43:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/13 02:29:33 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/14 20:42:51 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char	*gnl_extract_line(char *stash, int p)
 		line[i++] = stash[i++];
 	line[i] = '\0';
 	i = 0;
-	length = gnl_strlen(stash);
-	while (i < length - p)
+	t_length = gnl_strlen(stash);
+	while (stash)
 		temp[i++] = stash[p + 1 + i++];
 	temp[i] = '\0';
 	free(stash);
@@ -37,13 +37,16 @@ char	*gnl_extract_line(char *stash, int p)
 
 char	*ft_gnl(char *buff, char *stash, char *line, fd);
 {
-	if (gnl_strchr(stash, '\n') != -1)
-		return (gnl_extract_line(stash, gnl_strchr(stash, '\n')));
-	else
-	{
+	while (gnl_strchr(stash, '\n') != -1)
+	
+		if (gnl_strchr(stash, '\n') != -1)
+			return (gnl_extract_line(stash, gnl_strchr(stash, '\n')));
+		buff = gnl_calloc(BUFFER_SIZE + 1, sizeof(char));
 		bytes = read(buff, BUFFER_SIZE, fd);
-		stash = gnl_strjoin_and_free(stash, buff)
-	}
+		stash = gnl_join_n_free(stash, buff)
+
+		
+		
 		while (gnl_strchr(stash, '\n') == -1 || gnl_strchr(stash, '\0') == -1))
 		{
 			
