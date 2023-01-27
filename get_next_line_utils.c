@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
+/*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 20:02:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/27 03:39:49 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/01/27 20:04:41 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,27 @@ int		gnl_strchr(const char *s, char c)
 {
 	int		i;
 
-	printf("on est dans STRCHR   ");
+	printf("on est dans STRCHR avec \"%s\"\n", s);
 	i = 0;
 	if (s == NULL)
-		printf("il n'y a rien laaa\n");
+	{
+		printf("stash n'existe pas encore\n");
 		return (-1);
+	}
 	while (s[i] != '\0')
 	{
-		printf("on est dans le WHILE de STRchr\n");
 		if (s[i] == c)
-			printf("ca y est on a trouvé le '/0' cherché\n");
+		{
+			printf("ca y est on a trouvé le '%c' cherché a %d\n", c, i);
 			return (i);
+		}
 		i++;
-		
 	}
-	if (s[i] == '\0')
+	if (s[i] == c)
+	{
 		printf("s[i] ==== /o\n");
 		return (i);
+	}
 	printf("résultat bien egal a -1\n");
 	return (-1);
 }
