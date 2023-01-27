@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 20:02:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/14 18:15:56 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/27 03:39:49 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "get_next_line.h"
 
-int	ft_strlen(const char *s)
+int	gnl_strlen(const char *s)
 {
 	int	i;
 
@@ -26,7 +24,7 @@ int	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_calloc(int count, int size)
+char	*gnl_calloc(int count, int size)
 {
 	char	*ptr;
 	int		i;
@@ -43,35 +41,83 @@ char	*ft_calloc(int count, int size)
 	return (ptr);
 }
 
-int	ft_strchr(const char *s, int c)
+int		gnl_strchr(const char *s, char c)
 {
 	int		i;
 
+	printf("on est dans STRCHR   ");
 	i = 0;
+	if (s == NULL)
+		printf("il n'y a rien laaa\n");
+		return (-1);
 	while (s[i] != '\0')
 	{
-		if (s[i] == (char)c)
+		printf("on est dans le WHILE de STRchr\n");
+		if (s[i] == c)
+			printf("ca y est on a trouvé le '/0' cherché\n");
 			return (i);
 		i++;
+		
 	}
-	if (s[i] == (char)c)
+	if (s[i] == '\0')
+		printf("s[i] ==== /o\n");
 		return (i);
+	printf("résultat bien egal a -1\n");
 	return (-1);
 }
 
-static char	*gnl_join(char const *stash,
-	char const *buff, char *res, int stash_len)
+// int	GGgnl_strchr(const char *s, int c)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	if (!s)
+// 		return (0);
+// 	if (c == '\0')
+// 		return ((char *)&s[gnl_strlen(s)]);
+// 	while (s[i] != '\0')
+// 	{
+// 		if (s[i] == (char) c)
+// 			return ((char *)&s[i]);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+//TOSH VERSION
+// int	gnl_strchr(const char *s, char c)
+// {
+// 	int		i;
+
+// 	i = 0;
+// 	if (s == NULL)
+// 		printf("il n'y a rien laaa\n");
+// 		return (-1);
+// 	while (s[i] != '\0')
+// 	{
+// 		if (s[i] == c)
+// 			return (i);
+// 		i++;
+// 	}
+// 	if (s[i] == c)
+// 		return (i);
+// 	return (-1);
+// }
+
+static char	*gnl_join(char const *stash, char const *buff, char *str)
 {
 	int		i;
 	int		buff_len;
+	int		stash_len;
 
 	i = 0;
-	buff_len = ft_strlen(buff);
+	buff_len = gnl_strlen(buff);
+	stash_len = gnl_strlen(stash);
 	if (stash != NULL)
 	{
 		while (i < stash_len)
 		{
-			res[i] = stash[i];
+			str[i] = stash[i];
 			i++;
 		}
 	}
@@ -80,30 +126,25 @@ static char	*gnl_join(char const *stash,
 	{
 		while (i < buff_len)
 		{
-			res[stash_len + i] = buff[i];
+			str[stash_len + i] = buff[i];
 			i++;
 		}
 	}
-	res[stash_len + i] = '\0';
-	return (res);
+	str[stash_len + i] = '\0';
+	return (str);
 }
 
 char	*gnl_join_n_free(char const *stash, char const *buff)
 {
-	int		stash_len;
-	int		buff_len;
-	char	*res;
+	char	*str;
 
-	stash_len = gnl_strlen(stash);
-	buff_len = gnl_strlen(buff);
-	res = (char *)malloc(sizeof(char) * (stash_len + buff_len + 1));
-	if (!stash)
-		// malloc (stash * 1) = '\0'
-	if (!res )
+	str = (char *)gnl_calloc((sizeof(char)), (gnl_strlen(stash) + (gnl_strlen(buff)) + 1));
+	if (!str)
 		return (NULL);
-	res = gnl_join(stash, buff, res, stash_len);
-	free((void *)stash);
-	free((void *)buff);
-	return (res);
+	str = gnl_join(stash, buff, str);
+	printf("STR J_N_FREE was : ''%s''\n", str);
+	// free((void *)stash);
+	// free((void *)buff);
+	return (str);
 }
 
