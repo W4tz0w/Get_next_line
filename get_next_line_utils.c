@@ -6,7 +6,7 @@
 /*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 20:02:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/27 20:04:41 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/27 20:42:49 by egiovann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int		gnl_strchr(const char *s, char c)
 {
 	int		i;
 
-	printf("on est dans STRCHR avec \"%s\"\n", s);
+	printf("on est dans STRCHR\n");
 	i = 0;
 	if (s == NULL)
 	{
@@ -56,7 +56,7 @@ int		gnl_strchr(const char *s, char c)
 	{
 		if (s[i] == c)
 		{
-			printf("ca y est on a trouvé le '%c' cherché a %d\n", c, i);
+			printf("ca y est on a trouvé le 'c' cherché a %d\n", i);
 			return (i);
 		}
 		i++;
