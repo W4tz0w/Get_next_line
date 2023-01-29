@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gnl.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 18:43:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/27 23:15:53 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/29 03:36:07 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*gnl_fill_stash(char *stash, int fd)
 
 	bytes = 1;
 	buff = gnl_calloc(BUFFER_SIZE + 1, sizeof(char));
-	printf("We successfully calloced, bytes value is : ''%d''\n", bytes);
+	printf("We successfully calloced BUFF, bytes value is : ''%d''\n", bytes);
 	while (gnl_strchr(stash, '\n') == -1 && bytes > 0)
 	// while (bytes > 0)
 	{
@@ -97,25 +97,49 @@ char	*gnl_extract_two(char *stash, int pos)
 		return (NULL);
 	line = gnl_calloc(pos + 2, sizeof(char));
 	printf("LINE IS CALLOCED\n");
-	while (stash[j] && i < pos)
+	while (stash[j] || i < pos)
 		line[i++] = stash[j++];
 	if (stash[j] == '\n')
 		line[i++] = '\n';
-	printf("%s", line);
 	line[i] = '\0';
-	i = 0;
-	j = 0;
-	while (stash[pos + j])
-		temp[i++] = stash[pos + j++];
-	temp[i] = '\0';
-	free(stash);
-	i = 0;
-	j = 0;
-	while (temp[j])
-		stash[i++] = temp[j++];
-	free(temp);
+	printf("LINE extrct2 is : %s", line);
+	// i = 0;
+	// j = 1;
+	// while (stash[j])
+	// 	temp[i++] = stash[pos + j++];
+	// // {
+	// // 	temp[i] = stash[pos + i];
+	// // 	i++;
+	// // }
+	// temp[i] = '\0';
+	// printf("TEMP is %s\n", temp);
+	// free((void *)stash);
+	// stash = gnl_calloc(gnl_strlen(temp), sizeof(char));
+	// i = 0;
+	// j = 0;
+	// while (temp[j])
+	// 	stash[i++] = temp[j++];
+	// printf("STASH IS (end extrct2) : %s\n", stash);
+	// free(temp);
 	return (line);
 // 	return (NULL);
+}
+
+char		*gnl_cpy_leftovers(char *stash, int pos)
+{
+	printf("in cpy_leftovers stash is %s\n", stash);
+	int		i;
+	int		j;
+	char	*temp;
+	
+	i = 0;
+	j = 1;
+	temp = gnl_calloc(gnl_strlen(stash + 1), sizeof(char));
+	while (stash[j])
+		temp[i++] = stash[pos + j++];
+	temp[i] = '\0';
+	printf("STASH IS (end CPY_LEFTOVERS) : %s\n", stash);
+	return (temp);
 }
 
 
@@ -138,8 +162,8 @@ char	*get_next_line(int fd)
 	// printf("LINE IS CALLOCED\n");
 	pos = gnl_strchr(stash, '\n');
 	line = gnl_extract_two(stash, pos);
-	// line = gnl_extract_line(stash, pos);
-	// printf("line extracted is %s\n", line);
+	stash = gnl_cpy_leftovers(stash, pos);
+	printf("STASH to be REUSED is %s\n", stash);
 	return (line);
 	// return (ft_gnl(buff, stash, line, fd));
 }

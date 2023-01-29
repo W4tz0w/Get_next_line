@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/12 20:02:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/27 20:42:49 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/01/29 02:40:47 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int		gnl_strchr(const char *s, char c)
 		printf("s[i] ==== /o\n");
 		return (i);
 	}
-	printf("résultat bien egal a -1\n");
+	printf("on n'a pas trouvé de \\n\n");
 	return (-1);
 }
 
@@ -147,7 +147,7 @@ char	*gnl_join_n_free(char const *stash, char const *buff)
 		return (NULL);
 	str = gnl_join(stash, buff, str);
 	printf("STR J_N_FREE was : ''%s''\n", str);
-	// free((void *)stash);
+	free((void *)stash);
 	// free((void *)buff);
 	return (str);
 }
