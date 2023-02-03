@@ -1,151 +1,134 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        :::      ::::::::   */
-// /*   get_next_line.c                                    :+:      :+:    :+:   */
-// /*                                                    +:+ +:+         +:+     */
-// /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
-// /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-// /*   Updated: 2023/01/18 01:57:39 by daddy_cool       ###   ########.fr       */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
+/*   Updated: 2023/01/29 04:02:41 by daddy_cool       ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// #include "get_next_line.h"
+#include "get_next_line.h"
 
-// char	*ft_gnl(char *buff, char *stash, char *line, fd);
-// {
+char	*gnl_fill_stash(char *stash, int fd)
+{
+	int		bytes;
+	char	*buff;
+
+	bytes = 1;
+	buff = gnl_calloc(BUFFER_SIZE + 1, sizeof(char));
+	while (gnl_strchr(stash, '\n') == -1 && bytes > 0)
+	{
+		bytes = read(fd, buff, BUFFER_SIZE);
+		if (bytes == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[bytes] = '\0';
+		stash = gnl_join_n_free(stash, buff);
+	}
+	free(buff);
+	return (stash);
+}
+
+char	*gnl_extract_line(char *stash, int pos)
+{
+	int		i;
+	int		j;
+	char	*temp;
+	char	*line;
+
+	temp = gnl_calloc(pos + 2, sizeof(char));
+	i = 0;
+	j = 0;
+	if (!stash)
+		return (NULL);
+	line = gnl_calloc(pos + 2, sizeof(char));
+	// YOOOO PROBLEME ICI (dans le while || ou && )
+	if (pos == -1)
+	{
+		while (stash[j])
+			line[i++] = stash[j++];
+	}
+	if (pos > 0)
+	{
+		while (stash[j] && i < pos)
+			line[i++] = stash[j++];
+		if (stash[j] == '\n')
+			line[i++] = '\n';
+	}
+	line[i] = '\0';
+	return (line);
+}
+
+char		*gnl_cpy_leftovers(char *stash, int pos)
+{
+	int		i;
+	int		j;
+	char	*temp;
 	
-// 	int	read_count;
-
-// 	read_count = 1;
-// 	// valeur de retour de "read"
-// 	while (read_count > 0 || ft_strchr(line, '\n') != -1)
-// 	// tant que j'ai qque chose a lire, OU si je trouve '\n'
-// 	{
-// 		if (ft_strchr(line, '\n') != -1)
-// 			return (break_line(line, stash, ft_strchr(line, '\n')));
-// 		// si je trouve '\n' >>> on renvoie la ligne / on copie les leftovers dans stash / free line / MAIS PAS FREE valeur retour
-// 		buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-// 		// reset buffer
-// 		read_count = read(fd, buff, BUFFER_SIZE);
-// 		// appel de read_fd
-// 		// on set read_count, le but est de voir si y'a qque chose de lu, donc si on est pas deja a la fin du fd
-// 		if (read_count == 0)
-// 			return (handle_end(buff, line));
-// 		// auquel cas, on retourne NULL (*** a verifier ***)
-// 		// EH NON ! Car si rien n'a ete lu cet appel, il est fort probable qu'au precedent la stash eu ete remplie
-// 		if (ft_strchr(buff, '\n') != -1)
-// 		// apres un check pour '\n', puis un appel de read, puis un check pour '\0', on re-check '\n'
-// 		{
-// 			line = ft_strjoin_and_free(line, buff);
-// 			// colle line+++buff. // free params. // (mais pas free variable de retour))
-// 			return (break_line(line, stash, ft_strchr(line, '\n')));
-// 			// on renvoie la ligne / on copie les leftovers dans stash / free line / MAIS PAS FREE valeur retour
-// 		}
-// 		else
-// 			line = ft_strjoin_and_free(line, buff);
-// 	}
-// 	return (NULL);
-// }
-
-// char	*cpy_cut_line(char *src)
-// {
-// 	int		i;
-// 	char	*res;
-
-// 	i = 0;
-// 	res = (char *)malloc(sizeof(char) * (ft_strlen(src) + 1));
-// 	if (!res)
-// 		return (NULL);
-// 	while (src[i] != '\0')
-// 	{
-// 		res[i] = src[i];
-// 		i++;
-// 	}
-// 	res[i] = '\0';
-// 	src[0] = '\0';
-// 	return (res);
-// }
-
-// char	*cpy_cut_line(char *stash)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	*line;
-// 	char	*tmp;
-
-// 	i = 0;
-// 	j = 0;
-// 	while (stash[i] != '\n' || stash[i] != '\0')
-// 		line[i++] = stash[i++]
-// 	line[i + 1] = stash[i + 1];
-// 	while (stash[i] != '\0')
-// 		tmp[j++] = stash[i++]
-// 	stash[i] = '\0'
-// 	free(stash)
-// 	i = 0;
-// 	while (tmp)
-// 		stash[i++] = tmp[i++]
-// 	return (line);
-// }
-
-// char	*get_next_line(int fd)
-// {
-// 	char			*line;
-// 	char			*buff;
-// 	static char		stash[BUFFER_SIZE + 1];
-
-// 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
-// 		return (NULL);
-// 	buff = NULL;
-// 	line = cpy_cut_line(stash);
-// 		// calloc n set line from stash (obv if gnl was called at least one time before), and writes '\0' in stash[0]
-// 	return (ft_gnl(buff, stash, line, fd));
-// 		// return the line OR NULL
-// }
-
-// // {
-// // 	buffer = NULL;
-// // 	ssize_t = read(fd, buffer, BUFFER_SIZE);
-// // 	buffer = []
-// // 	STATIC stash += buffer
-// // 	if (end_of_file || param NULL || file_empty)
-// // 		return (NULL);
-// // 	return (ft_gnl = line);
-// // }
-
-// int	main()
-// {
-// 	char	*stash;
-
-// 	stash = "HelloDolly";	
-// 	printf("%s", cpy_cut_line(stash));
-// 	return (2);
-// }
+	i = 0;
+	j = 1;
+	temp = gnl_calloc(gnl_strlen(stash + 1), sizeof(char));
+	while (stash[j])
+		temp[i++] = stash[pos + j++];
+	temp[i] = '\0';
+	return (temp);
+}
 
 
+char	*get_next_line(int fd)
+{
+	char			*line;
+	static char		*stash;
+	int				pos;
 
-	
-// 		if (gnl_strchr(stash, '\n') != -1)
-// 			return (gnl_extract_line(stash, gnl_strchr(stash, '\n')));
-// 		buff = gnl_calloc(BUFFER_SIZE + 1, sizeof(char));
-// 		bytes = read(buff, BUFFER_SIZE, fd);
-// 		stash = gnl_join_n_free(stash, buff);
-// 		if (bytes == 0)
-// 			return (gnl_eof(buff, line));
+	if (fd < 0 || BUFFER_SIZE < 1)
+		return (NULL);
+	stash = gnl_fill_stash(stash, fd);
+	if (stash[0] == '\0')
+		return (NULL);
+	pos = gnl_strchr(stash, '\n');
+	line = gnl_extract_line(stash, pos);
+	stash = gnl_cpy_leftovers(stash, pos);
+	return (line);
+}
 
-		
-
-			
-// 		// auquel cas, on retourne NULL (*** a verifier ***)
-// 		// EH NON ! Car si rien n'a ete lu cet appel, il est fort probable qu'au precedent la stash eu ete remplie
-// 		if (ft_strchr(buff, '\n') != -1)
-// 		// apres un check pour '\n', puis un appel de read, puis un check pour '\0', on re-check '\n'
-// 		{
-// 			line = ft_strjoin_and_free(line, buff);
-// 			// colle line+++buff. // free params. // (mais pas free variable de retour))
-// 			return (break_line(line, stash, ft_strchr(line, '\n')));
-// 			// on renvoie la ligne / on copie les leftovers dans stash / free line / MAIS PAS FREE valeur retour
-// 		}
-// 		else
-// 			line = ft_strjoin_and_free(line, buff);
+int	main(void)
+{
+	char	*line;
+	int		i;
+	int		fd1;
+	int		fd2;
+	int		fd3;
+	int		fd4;
+	fd1 = open("test1.txt", O_RDONLY);
+	fd2 = open("test2.txt", O_RDONLY);
+	fd3 = open("test3.txt", O_RDONLY);
+	fd4 = open("test4.txt", O_RDONLY);
+	i = 1;
+	while (i < 5)
+	{
+		line = get_next_line(fd1);
+		printf("line [%02d]: %s\n", i, line);
+		free(line);
+		line = get_next_line(fd2);
+		printf("line [%02d]: %s\n", i, line);
+		free(line);
+		line = get_next_line(fd3);
+		printf("line [%02d]: %s\n", i, line);
+		free(line);
+		line = get_next_line(fd4);
+		printf("line [%02d]: %s\n", i, line);
+		free(line);
+		i++;
+	}
+	close(fd1);
+	close(fd2);
+	close(fd3);
+	close(fd4);
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 18:43:27 by egiovann          #+#    #+#             */
-/*   Updated: 2023/01/29 03:36:07 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/01/29 04:05:19 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,18 @@ char	*gnl_extract_two(char *stash, int pos)
 		return (NULL);
 	line = gnl_calloc(pos + 2, sizeof(char));
 	printf("LINE IS CALLOCED\n");
-	while (stash[j] || i < pos)
-		line[i++] = stash[j++];
-	if (stash[j] == '\n')
-		line[i++] = '\n';
+	if (pos == -1)
+	{
+		while (stash[j])
+			line[i++] = stash[j++];
+	}
+	if (pos > 0)
+	{
+		while (stash[j] && i < pos)
+			line[i++] = stash[j++];
+		if (stash[j] == '\n')
+			line[i++] = '\n';
+	}
 	line[i] = '\0';
 	printf("LINE extrct2 is : %s", line);
 	// i = 0;
@@ -177,9 +185,9 @@ int	main(void)
 	int		fd3;
 	int		fd4;
 	fd1 = open("test1.txt", O_RDONLY);
-	// fd2 = open("/42_born_to_code/Stud'/Get_next_line/test2.txt", O_RDONLY);
-	// fd3 = open("/42_born_to_code/Stud'/Get_next_line/test3.txt", O_RDONLY);
-	// fd4 = open("/42_born_to_code/Stud'/Get_next_line/test4.txt", O_RDONLY);
+	fd2 = open("test2.txt", O_RDONLY);
+	fd3 = open("test3.txt", O_RDONLY);
+	fd4 = open("test4.txt", O_RDONLY);
 	i = 1;
 	while (i < 5)
 	{
@@ -198,8 +206,8 @@ int	main(void)
 		i++;
 	}
 	close(fd1);
-	// close(fd2);
-	// close(fd3);
-	// close(fd4);
+	close(fd2);
+	close(fd3);
+	close(fd4);
 	return (0);
 }
