@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:45:03 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/02/06 00:05:34 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/02/24 21:38:22 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 11
+#  define BUFFER_SIZE 1
 # endif
 
 # include <stdio.h>
@@ -26,8 +26,7 @@
 int			gnl_strlen(const char *s);
 int			gnl_strchr(const char *s, char c);
 char		*gnl_calloc(int count, int size);
-// static char	*gnl_join(char const *stash, char const *buff, char *str);
-char		*gnl_join_n_free(char const *stash, char const *buff);
+char		*gnl_join_n_free(char *stash, char *buff);
 char		*gnl_fill_stash(char *stash, int fd);
 char		*gnl_extract_line(char *stash, int pos);
 char		*gnl_cpy_leftovers(char *stash, int pos);
