@@ -6,40 +6,58 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/02/24 21:57:17 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/02/25 23:09:31 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+/*DEBUG=========================================================================*/
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <limits.h>
+#include <errno.h>
+#include <pthread.h>
+#include <math.h>
+/*DEBUG=========================================================================*/
 char	*gnl_fill_stash(char *stash, int fd)
 {
+	// dprintf(2, "entering %s (%s:%d)\n", __FUNCTION__, __FILE__,__LINE__);//DEBUG
+	// printf("stash is \033[1m|%s|\033[0m\n", stash);
 	int		bytes;
 	char	*buff;
 
 	bytes = 1;
-	printf("FILLSTASH stash is %s\n", stash);
 	while (gnl_strchr(stash, '\n') == -1 && bytes > 0)
 	{
 		buff = gnl_calloc(BUFFER_SIZE + 1, sizeof(char));
-		// printf("pos is %d\n", gnl_strchr(stash, '\n'));
+		if (!buff)
+			return (NULL);
 		bytes = read(fd, buff, BUFFER_SIZE);
-		// printf("BUFF is %s, bytes is %d\n", buff, bytes);
+		// dprintf(2, "read %d char : |\033[1m%s\033[0m|\n", bytes, buff);//DEBUG
 		if (bytes < 0)
 		{
+			// dprintf(2, "exiting %s (%s:%d) : SECU 1\n", __FUNCTION__, __FILE__,__LINE__);//DEBUG
 			free(buff);
 			return (NULL);
 		}
 		if (bytes == 0 && gnl_strlen(buff) == 0)
 		{
+			// dprintf(2, "exiting %s (%s:%d) : SECU 2\n", __FUNCTION__, __FILE__,__LINE__);//DEBUG
 			free(buff);
-			return (NULL);
+			return (stash);
 		}
 		buff[bytes] = '\0';
+		// dprintf(2, "buff is : |\033[1m%s\033[0m|\n", buff);//DEBUG
 		stash = gnl_join_n_free(stash, buff);
+		// dprintf(2, "joined it all : |\033[1m%s\033[0m|\n", stash);//DEBUG
 		free(buff);
+	// printf("end of FILLSTASH : %s\n", stash);
 	}
-	// printf("bytes is %d\n", bytes);
 	return (stash);
 }
 
@@ -51,13 +69,8 @@ char	*gnl_extract_line(char *stash, int pos)
 
 	i = -1;
 	j = -1;
-	// printf("stash is : %s\n", stash);
-	// printf("pos is %d\n", pos);
 	if (!stash)
-	{
-		printf("stash doesn't exist");
 		return (NULL);
-	}
 	line = gnl_calloc(pos + 2, sizeof(char));
 	if (pos == -1)
 	{
@@ -74,33 +87,40 @@ char	*gnl_extract_line(char *stash, int pos)
 	}
 	line[++i] = '\0';
 	// stash[j] = '\0';
-	// printf("Line is %s\n", line);
 	return (line);
 }
 
+/*function that save what's after the '\n' char in the stash.
+ * its arguments are :
+ 	* stash : the address of the static variable
+	* pos : the pos of the first '\n' char in the string
+ * it return a pointer to a string containing the leftovers of the stash
+*/
 char	*gnl_cpy_leftovers(char *stash, int pos)
 {
+	//dprintf(2, "entering %s (%s:%d)\n", __FUNCTION__, __FILE__,__LINE__);//DEBUG
+	//dprintf(2, "stash is \033[1m|%s|\033[0m; pos = %d\n", stash, pos);//DEBUG
+	char	*tmp;
 	int		i;
-	int		j;
-	char	*temp;
-	
-	// printf("POS is : ''%d''\n", pos);
-	i = -1;
-	j = -1;
-	if (pos == -1)
-		return (NULL);
-	printf("stash CPYLEFTVRS is : ''%s'', pos is %d, len is %d \n", stash, pos, gnl_strlen(stash));
-	temp = gnl_calloc(gnl_strlen(stash) - pos, sizeof(char));
-	while (stash[++j] != '\0')
+
+	if (pos < 0) {
+		//dprintf(2, "SECU 1 : pos = %d\n", pos);//DEBUG
+		return NULL;}
+	//alocate temporary string (size = BUFFER_SIZE)
+	tmp = gnl_calloc(BUFFER_SIZE, sizeof (char));
+	if (!tmp) {
+		//dprintf(2, "SECU 2\n");//DEBUG
+		return (NULL);}
+	//copy in temp the content of stash + pos;
+	i = 0;
+	pos ++;
+	while ((stash + pos)[i] != '\0')
 	{
-		temp[++i] = stash[pos + 1 + j];
+		tmp[i] = (stash + pos)[i];
+		i ++;
 	}
-	temp[i] = '\0';
-	// printf("LEFTOVERS are : ''%s''\n", temp);
-	// printf("stash BEFORE free is : ''%s''\n", stash);
-	free(stash);
-	// printf("stash AFTER free is : '%s'\n", stash);
-	return (temp);
+	//dprintf(2, "tmp is %s\n", tmp);//DEBUG
+	return tmp;
 }
 
 char	*get_next_line(int fd)
@@ -111,26 +131,22 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
-	printf("Stash in Main is %s\n", stash);
 	stash = gnl_fill_stash(stash, fd);
-	if (stash[0] == '\0')
+	if (stash == NULL || stash[0] == '\0')
 	{
-		printf("yes this zorks\n");
 		free(stash);
 		return (NULL);
 	}
-	printf("Stash read \"%s\"\n", stash);
 	pos = gnl_strchr(stash, '\n');
-	printf("Pos detected is %d\n", pos);
 	line = gnl_extract_line(stash, pos);
-	printf("Line captured to return is %s\n", line);
 	stash = gnl_cpy_leftovers(stash, pos);
-	printf("Stash is now updated to %s\n", stash);
+	//dprintf(2, "stash is %s\n", stash);//DEBUG
 	return (line);
 }
 
 int	main(void)
 {
+//	printf("\033(0");
 	char	*line;
 	int		i;
 	int		fd1;
@@ -138,7 +154,6 @@ int	main(void)
 	int		fd3;
 	int		fd4;
 
-	printf("%d\n", gnl_strlen("Hello"));
 	fd1 = open("test1.txt", O_RDONLY);
 	fd2 = open("test2.txt", O_RDONLY);
 	fd3 = open("test3.txt", O_RDONLY);
@@ -165,6 +180,7 @@ int	main(void)
 	close(fd2);
 	close(fd3);
 	close(fd4);
-	system("leaks a.out");
+//	system("leaks a.out");
+//	printf("\033(1");
 	return (0);
 }

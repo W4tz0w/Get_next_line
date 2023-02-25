@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:45:03 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/02/24 21:38:22 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/02/25 23:09:58 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 11
 # endif
 
 # include <stdio.h>
