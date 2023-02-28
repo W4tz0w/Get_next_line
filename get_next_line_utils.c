@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 03:42:24 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/02/25 23:08:25 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/02/27 00:31:48 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ char	*gnl_calloc(int count, int size)
 
 	ptr = malloc(count * size);
 	if (!ptr)
+	{
+		free(ptr);
 		return (NULL);
+	}
 	i = 0;
 	while (i < count * size)
 		ptr[i ++] = 0;
@@ -91,6 +94,7 @@ char	*gnl_join_n_free(char *stash, char *buff)
 	char	*str;
 	int		stash_buff_len_1;
 
+	// printf("JOINNFREE stash is : %s\n", stash);
 	stash_buff_len_1 = gnl_strlen(stash) + gnl_strlen(buff) + 1;
 	str = (char *)gnl_calloc(stash_buff_len_1, (sizeof(char)));
 	if (!str)
