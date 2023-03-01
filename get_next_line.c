@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/02/28 14:43:32 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/03/01 02:43:56 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,11 @@ char	*gnl_fill_stash(char *stash, int fd)
 		if (bytes == 0 && gnl_strlen(buff) == 0 /*&& gnl_strchr(stash, '\n') != -1*/)
 		{
 			free(buff);
+			// printf("BYTES is : %d\n", bytes);
+			// printf("STASH is : %s\n", stash);
 			return (stash);
 		}
 		buff[bytes] = '\0';
-		// printf("FILLSTASH stash is : %s\n", stash);
 		stash = gnl_join_n_free(stash, buff);
 		free(buff);
 	}
@@ -60,7 +61,7 @@ char	*gnl_extract_line(char *stash, int pos)
 	j = -1;
 	if (!stash)
 		return (NULL);
-	line = gnl_calloc(pos + 9, sizeof(char));
+	line = gnl_calloc(pos + 2, sizeof(char));
 	if (pos == -1)
 	{
 		while (stash[++j] != '\0')
@@ -68,15 +69,15 @@ char	*gnl_extract_line(char *stash, int pos)
 		// line[++i] = '\0';
 		// printf("EXTRLINE SECU FINALE\n");
 	}
-	if (pos > 0)
+	if (pos >= 0)
 	{
-		while (stash[++j] && i < pos)
-			line[++i] = stash[j];
-		if (stash[j] == '\n')
-			line[++i] = '\n';
+		while (stash[++j] && ++i <= pos)
+			line[i] = stash[j];
+		// if (stash[j] == '\n')
+		// 	line[++i] = '\n';
 		// printf("EXTRLINE is : %s\n", stash);
 	}
-	// line[++i] = '\0';
+	line[++i] = '\0';
 	return (line);
 }
 
@@ -86,7 +87,7 @@ char	*gnl_extract_line(char *stash, int pos)
 	* pos : the pos of the first '\n' char in the string
  * it return a pointer to a string containing the leftovers of the stash
 */
-char	*gnl_cpy_leftovers(char *stash, int pos)
+char	*gnl_cpy_leftovers(char *stash, char *line, int pos)
 {
 	char	*tmp;
 	int		i;
@@ -94,16 +95,18 @@ char	*gnl_cpy_leftovers(char *stash, int pos)
 	if (pos < 0)
 		return (NULL);
 	// printf("CPYLFTVERS stash is : %s\n", stash);
-	tmp = gnl_calloc(BUFFER_SIZE + 1, sizeof (char));
+	tmp = gnl_calloc(gnl_strlen(stash) - gnl_strlen(line) + 1, sizeof (char));
 	if (!tmp)
 		return (NULL);
 	i = 0;
-	pos ++;
-	while ((stash + pos)[i] != '\0')
+	++ pos;
+	while (stash[pos + i] != '\0')
 	{
-		tmp[i] = (stash + pos)[i];
-		i ++;
+		tmp[i] = (stash[pos + i]);
+		++ i;
 	}
+	tmp[i] = '\0';
+	free(stash);
 	// printf("CPYLFTVRS is : %s\n", tmp);
 	return (tmp);
 }
@@ -111,61 +114,61 @@ char	*gnl_cpy_leftovers(char *stash, int pos)
 char	*get_next_line(int fd)
 {
 	char			*line;
-	static char		*stash;
+	static char		*stash = NULL;
 	int				pos;
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (NULL);
 	stash = gnl_fill_stash(stash, fd);
-	if (stash == NULL)
+	if (stash == NULL || gnl_strlen(stash) == 0)
 	{
 		free(stash);
 		return (NULL);
 	}
 	pos = gnl_strchr(stash, '\n');
-	// printf("GNL stash is : %s\n", stash);
 	line = gnl_extract_line(stash, pos);
-	stash = gnl_cpy_leftovers(stash, pos);
+	stash = gnl_cpy_leftovers(stash, line, pos);
+	// printf("len STASH GNL is : %d\n", gnl_strlen(stash));
 	return (line);
 }
 
-int	main(void)
-{
-//	printf("\033(0");
-	char	*line;
-	int		i;
-	int		fd1;
-	int		fd2;
-	int		fd3;
-	int		fd4;
+// int	main(void)
+// {
+// //	printf("\033(0");
+// 	char	*line;
+// 	int		i;
+// 	int		fd1;
+// 	int		fd2;
+// 	int		fd3;
+// 	int		fd4;
 
-	fd1 = open("test1.txt", O_RDONLY);
-	fd2 = open("test2.txt", O_RDONLY);
-	fd3 = open("test3.txt", O_RDONLY);
-	fd4 = open("test4.txt", O_RDONLY);
-	i = 1;
-	while (i < 11)
-	{
-		line = get_next_line(fd1);
-		fflush(stdout);
-		printf("line [%02d]: %s\n", i, line);
-		free(line);
-		// line = get_next_line(fd2);
-		// printf("line [%02d]: %s", i, line);
-		// free(line);
-		// line = get_next_line(fd3);
-		// printf("line [%02d]: %s", i, line);
-		// free(line);
-		// line = get_next_line(fd4);
-		// printf("line [%02d]: %s", i, line);
-		// free(line);
-		i++;
-	}
-	close(fd1);
-	close(fd2);
-	close(fd3);
-	close(fd4);
-	system("leaks a.out");
-//	printf("\033(1");
-	return (0);
-}
+// 	fd1 = open("test1.txt", O_RDONLY);
+// 	fd2 = open("test2.txt", O_RDONLY);
+// 	fd3 = open("test3.txt", O_RDONLY);
+// 	fd4 = open("test4.txt", O_RDONLY);
+// 	i = 1;
+// 	while (i < 11)
+// 	{
+// 		line = get_next_line(fd3);
+// 		// fflush(stdout);
+// 		printf("line [%02d]: %s\n", i, line);
+// 		free(line);
+// 		// line = get_next_line(fd2);
+// 		// printf("line [%02d]: %s", i, line);
+// 		// free(line);
+// 		// line = get_next_line(fd3);
+// 		// printf("line [%02d]: %s", i, line);
+// 		// free(line);
+// 		// line = get_next_line(fd4);
+// 		// printf("line [%02d]: %s", i, line);
+// 		// free(line);
+// 		i++;
+// 	}
+// 	close(fd1);
+// 	close(fd2);
+// 	close(fd3);
+// 	close(fd4);
+// 	system("leaks a.out");
+// //	printf("\033(1");
+// 	return (0);
+// }

@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 03:42:24 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/02/27 00:31:48 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/03/01 01:29:15 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ char	*gnl_join_n_free(char *stash, char *buff)
 	if (!str)
 		return (NULL);
 	str = gnl_join(stash, buff, str);
-	free((void *)stash);
+	if (stash != NULL)
+		free((void *)stash);
 	return (str);
 }
