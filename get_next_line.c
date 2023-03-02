@@ -6,7 +6,7 @@
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/03/01 02:43:56 by daddy_cool       ###   ########.fr       */
+/*   Updated: 2023/03/02 13:41:42 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ char	*get_next_line(int fd)
 // 	i = 1;
 // 	while (i < 11)
 // 	{
-// 		line = get_next_line(fd3);
+// 		line = get_next_line(fd1);
 // 		// fflush(stdout);
 // 		printf("line [%02d]: %s\n", i, line);
 // 		free(line);
