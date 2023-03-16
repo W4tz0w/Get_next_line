@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/26 17:44:29 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/03/16 17:53:29 by daddy_cool       ###   ########.fr       */
+/*   Created: 2023/03/16 18:07:43 by daddy_cool        #+#    #+#             */
+/*   Updated: 2023/03/16 18:21:24 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*gnl_fill_stash(char *stash, int fd)
 {
@@ -94,33 +94,32 @@ char	*gnl_cpy_leftovers(char *stash, char *line, int pos)
 char	*get_next_line(int fd)
 {
 	char			*line;
-	static char		*stash = NULL;
+	static char		*stash[4096];
 	int				pos;
 
 	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 	{	
-		free(stash);
-		stash = NULL;
+		free(stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	stash = gnl_fill_stash(stash, fd);
-	if (stash == NULL)
+	stash[fd] = gnl_fill_stash(stash[fd], fd);
+	if (stash[fd] == NULL)
 		return (NULL);
-	if (gnl_strlen(stash) == 0 || stash[0] == '\0')
+	if (gnl_strlen(stash[fd]) == 0 || stash[fd][0] == '\0')
 	{
-		free(stash);
-		stash = NULL;
+		free(stash[fd]);
+		stash[fd] = NULL;
 		return (NULL);
 	}
-	pos = gnl_strchr(stash, '\n');
-	line = gnl_extract_line(stash, pos);
-	stash = gnl_cpy_leftovers(stash, line, pos);
+	pos = gnl_strchr(stash[fd], '\n');
+	line = gnl_extract_line(stash[fd], pos);
+	stash[fd] = gnl_cpy_leftovers(stash[fd], line, pos);
 	return (line);
 }
 
 // int	main(void)
 // {
-// //	printf("\033(0");
 // 	char	*line;
 // 	int		i;
 // 	int		fd1;
@@ -136,18 +135,17 @@ char	*get_next_line(int fd)
 // 	while (i < 11)
 // 	{
 // 		line = get_next_line(fd1);
-// 		// fflush(stdout);
 // 		printf("line [%02d]: %s\n", i, line);
 // 		free(line);
-// 		// line = get_next_line(fd2);
-// 		// printf("line [%02d]: %s", i, line);
-// 		// free(line);
-// 		// line = get_next_line(fd3);
-// 		// printf("line [%02d]: %s", i, line);
-// 		// free(line);
-// 		// line = get_next_line(fd4);
-// 		// printf("line [%02d]: %s", i, line);
-// 		// free(line);
+// 		line = get_next_line(fd2);
+// 		printf("line [%02d]: %s\n", i, line);
+// 		free(line);
+// 		line = get_next_line(fd3);
+// 		printf("line [%02d]: %s\n", i, line);
+// 		free(line);
+// 		line = get_next_line(fd4);
+// 		printf("line [%02d]: %s\n", i, line);
+// 		free(line);
 // 		i++;
 // 	}
 // 	close(fd1);
@@ -155,6 +153,5 @@ char	*get_next_line(int fd)
 // 	close(fd3);
 // 	close(fd4);
 // 	system("leaks a.out");
-// //	printf("\033(1");
 // 	return (0);
 // }
