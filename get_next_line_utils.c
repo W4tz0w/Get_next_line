@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: egiovann <egiovann@student.42.fr>          +#+  +:+       +#+        */
+/*   By: daddy_cool <daddy_cool@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 03:42:24 by daddy_cool        #+#    #+#             */
-/*   Updated: 2023/03/15 19:40:42 by egiovann         ###   ########.fr       */
+/*   Updated: 2023/03/16 13:09:52 by daddy_cool       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ char	*gnl_join_n_free(char *stash, char *buff)
 	char	*str;
 	int		stash_buff_len_1;
 
-	// printf("JOINNFREE stash is : %s\n", stash);
 	stash_buff_len_1 = gnl_strlen(stash) + gnl_strlen(buff) + 1;
 	str = (char *)gnl_calloc(stash_buff_len_1, (sizeof(char)));
 	if (!str)
